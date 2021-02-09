@@ -120,15 +120,15 @@ class PvzSearchOperation extends AbstractOperation
 		return $this;
 	}
 
-	/**
-	 * Поиск по координатам
-	 *
-	 * @param float $lt Широта левого верхнего угла
-	 * @param float $lg Долгота левого верхнего угла
-	 * @param float $rt Широта правого нижнего угла
-	 * @param float $rg Долгота правого нижнего угла
-	 * @return self
-	 */ 
+    /**
+     * Поиск по координатам
+     *
+     * @param float|null $lt Широта левого верхнего угла
+     * @param float|null $lg Долгота левого верхнего угла
+     * @param float|null $rt Широта правого нижнего угла
+     * @param float|null $rg Долгота правого нижнего угла
+     * @return self
+     */
 	public function coordinates(float $lt = null, float $lg = null, float $rt = null, float $rg = null): ?self
 	{
 		$this->coordinates = [
@@ -164,11 +164,12 @@ class PvzSearchOperation extends AbstractOperation
 		return $xml;
 	}
 
-	/**
-	 * Поиск по заданным условиям
-	 *
-	 * @return Pvz[]
-	 */
+    /**
+     * Поиск по заданным условиям
+     *
+     * @return Pvz[]
+     * @throws MeasoftException
+     */
 	public function search(): array
 	{
 		$response = $this->request($this->buildXml());
