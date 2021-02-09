@@ -12,10 +12,30 @@ class CalculatorOperation extends AbstractOperation
 	 */
 	private $townFrom;
 
+    /**
+     * @var string $addressFrom Адрес в городе-отправителе
+     */
+	private $addressFrom;
+
 	/**
 	 * @var string $townTo Город-получатель
 	 */
 	private $townTo;
+
+    /**
+     * @var string $addressTo Адрес в городе-получателе
+     */
+	private $addressTo;
+
+    /**
+     * @var string $zipCode Почтовый индекс в городе-получателе
+     */
+	private $zipCode;
+
+    /**
+     * @var string $pvz Код пункта самовывоза по справочнику
+     */
+	private $pvz;
 
 	/**
 	 * @var float $length Длина в сантиметрах
@@ -41,6 +61,16 @@ class CalculatorOperation extends AbstractOperation
 	 * @var int $service Режим доставки
 	 */
 	private $service;
+
+    /**
+     * @var float $price Сумма наложенного платежа
+     */
+	private $price;
+
+    /**
+     * @var float $insurancePrice Сумма объявленной ценности
+     */
+	private $insurancePrice;
 
 	/**
 	 * @param string $townFrom Город-отправитель
@@ -119,6 +149,66 @@ class CalculatorOperation extends AbstractOperation
 		return $this;
 	}
 
+    /**
+     * @param string $addressFrom
+     * @return CalculatorOperation
+     */
+    public function setAddressFrom(string $addressFrom): self
+    {
+        $this->addressFrom = $addressFrom;
+        return $this;
+    }
+
+    /**
+     * @param string $addressTo
+     * @return CalculatorOperation
+     */
+    public function setAddressTo(string $addressTo): self
+    {
+        $this->addressTo = $addressTo;
+        return $this;
+    }
+
+    /**
+     * @param string $zipCode
+     * @return CalculatorOperation
+     */
+    public function setZipCode(string $zipCode): self
+    {
+        $this->zipCode = $zipCode;
+        return $this;
+    }
+
+    /**
+     * @param string $pvz
+     * @return CalculatorOperation
+     */
+    public function setPvz(string $pvz): self
+    {
+        $this->pvz = $pvz;
+        return $this;
+    }
+
+    /**
+     * @param float $price
+     * @return CalculatorOperation
+     */
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+        return $this;
+    }
+
+    /**
+     * @param float $insurancePrice
+     * @return CalculatorOperation
+     */
+    public function setInsurancePrice(float $insurancePrice): self
+    {
+        $this->insurancePrice = $insurancePrice;
+        return $this;
+    }
+
 	/**
 	 * Сформировать XML
 	 *
@@ -130,21 +220,40 @@ class CalculatorOperation extends AbstractOperation
 		$calc = $xml->addChild('calc');
 		
 		$calc->addAttribute('townfrom', $this->townFrom);
+		if ($this->addressFrom) {
+            $calc->addAttribute('addressfrom', $this->addressFrom);
+        }
 		$calc->addAttribute('townto', $this->townTo);
+        if ($this->addressFrom) {
+            $calc->addAttribute('addressto', $this->addressTo);
+        }
+        if ($this->pvz) {
+            $calc->addAttribute('pvz', $this->pvz);
+        }
+        if ($this->zipCode) {
+            $calc->addAttribute('zipcode', $this->zipCode);
+        }
 		$calc->addAttribute('l', $this->length);
 		$calc->addAttribute('w', $this->width);
 		$calc->addAttribute('h', $this->height);
 		$calc->addAttribute('mass', $this->weight);
 		$calc->addAttribute('service', $this->service);
+        if ($this->price !== null) {
+            $calc->addAttribute('prcie', $this->price);
+        }
+        if ($this->insurancePrice !== null) {
+            $calc->addAttribute('inshprice', $this->insurancePrice);
+        }
 
 		return $xml;
 	}
 
-	/**
-	 * Расчет стоимости доставки
-	 *
-	 * @return CalculationResult[]
-	 */
+    /**
+     * Расчет стоимости доставки
+     *
+     * @return CalculationResult[]
+     * @throws MeasoftException
+     */
 	public function calculate(): array
 	{
 		$response = $this->request($this->buildXml());

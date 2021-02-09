@@ -49,6 +49,11 @@ class CalculationResult extends AbstractObject
 	 */
 	protected $maxDeliveryDays;
 
+    /**
+     * @var \DateTime $maxDeliveryDate Минимальная дата доставки с учетом выходных дней
+     */
+	protected $maxDeliveryDate;
+
 	public static function getFromXml(\SimpleXMLElement $xml, bool $fromNode = true): self
 	{
 		if (isset($xml->townfrom)) {
@@ -69,6 +74,7 @@ class CalculationResult extends AbstractObject
 			'price'           => self::extractXmlValue($xml, 'price', $fromNode, 'float'),
 			'minDeliveryDays' => self::extractXmlValue($xml, 'mindeliverydays', $fromNode, 'int'),
 			'maxDeliveryDays' => self::extractXmlValue($xml, 'maxdeliverydays', $fromNode, 'int'),
+			'minDeliveryDate' => self::extractXmlValue($xml, 'mindeliverydate', $fromNode, 'DateTime'),
 		];
 
 		return new CalculationResult($params);
@@ -145,4 +151,12 @@ class CalculationResult extends AbstractObject
 	{
 		return $this->maxDeliveryDays;
 	}
+
+    /**
+     * @return \DateTime
+     */
+    public function getMaxDeliveryDate(): ?\DateTime
+    {
+        return $this->maxDeliveryDate;
+    }
 }
