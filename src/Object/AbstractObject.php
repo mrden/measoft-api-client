@@ -44,10 +44,13 @@ abstract class AbstractObject
 			case 'bool':
 				$value = (bool) $value;
 				break;
+
+            case 'DateTime':
+                $value = new \DateTime($value);
+                break;
 			
 			default:
 				throw new MeasoftException('Неверно указан тип переменной');
-				break;
 		}
 
 		return $value;
